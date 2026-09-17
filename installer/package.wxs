@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+      Id="{8B046BA5-694D-4F67-98EA-6EDE8F621497}"
+      Name="Installer Bridge"
+      Language="1033"
+      Version="1.0.0"
+      Manufacturer="Installer Bridge"
+      UpgradeCode="{145AE564-9289-4990-8C3A-D68C3C274F09}">
+
+    <Package
+        InstallerVersion="500"
+        Compressed="yes"
+        InstallScope="perMachine" />
+
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="InstallerBridge">
+          <Component
+              Id="MarkerComponent"
+              Guid="{3C20EE24-33CB-48DD-8C2C-C90307077157}"
+              Win64="yes">
+            <RegistryValue
+                Root="HKLM"
+                Key="Software\InstallerBridge"
+                Name="Installed"
+                Type="integer"
+                Value="1"
+                KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="MainFeature" Title="Installer Bridge" Level="1">
+      <ComponentRef Id="MarkerComponent" />
+    </Feature>
+
+    <Binary Id="Bridge" SourceFile="build/bridge.exe" />
+
+    <InstallExecuteSequence>
+      <Custom Action="RunBridge" After="InstallInitialize">NOT Installed</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>
